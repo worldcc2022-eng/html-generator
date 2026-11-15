@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en" data-connector-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; frame-src https: 'self'; base-uri 'none'; form-action 'none'">
+<title>First-party XML File Browser</title>
+<link rel="stylesheet" href="../assets/style.css"><link rel="stylesheet" href="../assets/browser-extra.css">
+</head><body><main>
+<h1>First-party Event File Browser</h1>
+<p>XML file listing from your own connector; generated filenames are preserved.</p>
+<div id="browser-status" role="status" aria-live="polite">Loading file list…</div>
+<table><thead><tr><th>Filename</th><th>Description</th><th>Action</th></tr></thead><tbody id="file-results"></tbody></table>
+<h2>Selected page preview</h2>
+<iframe id="event-preview" title="Event page preview" sandbox="allow-scripts" referrerpolicy="no-referrer" loading="lazy" class="connector-preview"></iframe>
+</main><script src="../assets/browser.js" defer></script></body></html>

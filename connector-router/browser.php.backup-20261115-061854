@@ -1,0 +1,6 @@
+<?php
+declare(strict_types=1);
+require __DIR__.'/bootstrap.php';
+cr_html_headers();
+$routes = cr_latest_routes(50);
+?><!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>File Browser Demo</title><link rel="stylesheet" href="assets/style.css"></head><body><main><h1>First-party file browser</h1><p>This demo displays safe file metadata from your own connector. No script injection is required.</p><p><a href="connector.php">Inspect XML</a> · <a href="admin.php">Admin settings</a></p><table><thead><tr><th>Generated file</th><th>Description</th><th>Action</th></tr></thead><tbody><?php foreach ($routes as $r): ?><tr><td><?=cr_str($r['id'])?>.html</td><td><?=cr_str($r['title'])?></td><td><a href="<?=cr_str(cr_route_url($r['id']))?>">Open route</a></td></tr><?php endforeach; ?></tbody></table><?php if (!$routes): ?><p>No routes yet. Create one in Admin.</p><?php endif; ?></main></body></html>

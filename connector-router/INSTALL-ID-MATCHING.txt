@@ -1,0 +1,31 @@
+Connector ID Matching Patch
+
+INSTALL
+1. Back up your existing installation.
+2. Extract this ZIP into your connector-router installation, preserving folder paths and replacing the included files.
+3. In Admin, save GitHub Pages Directory as:
+   https://worldcc2022-eng.github.io/november14-events-world/
+4. Open your normal browser.php?Type=File&CONNECTOR=... link.
+
+The CONNECTOR parameter can contain /connector-router/id/?jd=YOUR_ID.
+The local /id/ endpoint returns valid XML with one File entry whose URL is:
+   CONFIGURED_DIRECTORY/YOUR_ID.html
+The first-party browser automatically opens that matching page.
+Add &auto=0 to browser.php's outer query to keep the listing and preview UI.
+
+No HTML upload, ID registration, or route generation is required for files in the configured GitHub Pages directory. Existing per-ID directory mappings take precedence over the default directory. IDs must contain 8-180 lowercase letters, digits, and hyphens, starting with a letter or digit. The destination file must already be published and accessible on GitHub Pages; the connector builds its exact URL without scanning or verifying remote files.
+
+This update uses valid XML metadata and browser navigation. It does not insert an iframe or executable script into an XML attribute.
+
+The ZIP contains no config.local.php, storage, credentials, or saved settings.
+The supplied assets.zip did not include a separate github-pages.php settings page; the directory field has therefore been added to admin.php and uses the existing github-pages.json settings format.
+
+TESTS
+Run from the installation directory:
+   php tests/id-routing.php
+Existing bin/smoke.php, bin/bulk-smoke.php, bin/github-smoke.php and bin/demo-smoke.php remain compatible.
+
+VERIFICATION
+Executed with PHP 8.2 in a local WebAssembly CGI runtime: nested CONNECTOR extraction, direct jd and legacy id, exact filename URL, invalid IDs, unsupported commands/types, missing configuration, XML endpoint response, authenticated admin setting save, trailing slash normalization, existing per-ID mappings, and all four existing smoke scripts (with CLI guards omitted only in temporary test copies).
+Parsed the XML independently and tested the actual browser script with a DOM environment for automatic navigation, auto=0 preview, and rejected cross-origin connector requests. Parsed all PHP files for syntax errors.
+No changes have been deployed to your server or GitHub repository.

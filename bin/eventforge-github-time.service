@@ -1,0 +1,18 @@
+[Unit]
+Description=EventForge GitHub schema timestamp worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=surprisehtml
+Group=surprisehtml
+WorkingDirectory=/home/surprisehtml/public_html
+ExecStart=/opt/cpanel/ea-php82/root/usr/bin/php /home/surprisehtml/public_html/bin/github-time-worker.php
+Restart=always
+RestartSec=5
+TimeoutStopSec=240
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

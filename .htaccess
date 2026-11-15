@@ -1,0 +1,19 @@
+Options -Indexes
+DirectoryIndex index.php
+RewriteEngine On
+RewriteRule ^(?:app|storage|tests|docs)(?:/|$) - [F,L,NC]
+RewriteRule ^(?:config\.php|README\.md)$ - [F,L,NC]
+RewriteRule ^install/?$ install.php [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L,QSA]
+<FilesMatch "^(config\.php|.*\.(?:log|sql|bak|lock|tmp))$">
+Require all denied
+</FilesMatch>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

@@ -1,0 +1,9 @@
+Options -Indexes
+RewriteEngine On
+# All visits to the legacy file-browser entry point pass through the
+# first-party connector allowlist. Do not bypass this gate.
+RewriteRule ^fckeditor/editor/filemanager/browser/default/browser\.html$ browser-gate.php [L,QSA]
+
+<FilesMatch "^(\.htpasswd|install\.sh|README\.md)$">
+    Require all denied
+</FilesMatch>

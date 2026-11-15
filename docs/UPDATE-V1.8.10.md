@@ -1,0 +1,13 @@
+# EventForge v1.8.10 — Visual Github Connect actions
+
+Fixes the raw API response page shown after Generate Deploy Key and Connect. The screenshot indicated a successful connection reached by a standard form POST rather than the intended AJAX handler. Github Connect now has a dedicated deferred script loaded before the shared application script, so another Settings enhancement cannot prevent the connection handler from initializing. Asset URLs are refreshed to v1.8.10.
+
+Generate and Connect stay on Settings through AJAX. Each action has its own Apple-style spinner and loading label inside the button, with controls disabled while busy. Generated public keys appear in the read-only key box with Copy Public Key and the repository Deploy Keys link. A successful connection changes the button to green Connected, including on reload. Editing repository/branch fields clears the displayed green state; failed requests remove it and display the specific error. Private keys remain excluded from all page/JSON output.
+
+Github Connect now appears in the right column below the Title Templates and ID Templates sections, outside the tab panels so it stays visible for either tab. On smaller screens it follows those sections in the existing single-column layout.
+
+Native non-AJAX form submissions now redirect back to Settings rather than showing JSON, with escaped error messages on the page. JSON requests retain the existing API format. This fallback also handles validation/CSRF failures. No deploy key is regenerated during installation of this update, and the encrypted saved key/connection settings are retained.
+
+Installation: extract into public_html and overwrite all included files, then refresh Settings with Ctrl+F5. No reinstall, database change or new deploy key is required. This is the connection UI update; existing generation output is preserved.
+
+Validation: updated AJAX interaction tests verify per-button loading, key display/copy, successful green Connected state, field changes, failure messages and busy cleanup. PHP view tests verify saved green state, spinners and private-key exclusion. Actual PHP HTTP response checks verify 303 redirects for native posts and safe JSON for AJAX. The rendered Settings DOM places the card in the right column after both template banks. Connector, no-clone Git dry-run, generation UI, title/ID/keyword, Unicode, renderer, count and random-ID tests pass; PHP and JS syntax checks pass. Independent code review approved the changes. Existing broader tests remain blocked by the unavailable storage/template.html fixture or PHP ZipArchive extension. Chromium is unavailable, so screenshot rendering was not verified here. Live credentials were not accessed or changed.
