@@ -1,0 +1,65 @@
+name: Extract zip
+
+on:
+  workflow_dispatch:
+    inputs:
+      zip_path:
+        description: 'রিপোতে zip ফাইলের পাথ'
+        required: true
+        default: 'script.zip'
+      dest:
+        description: 'কোন ফোল্ডারে খুলবে (ফাঁকা = রিপো রুট)'
+        required: false
+        default: '.'
+      keep_zip:
+        description: 'খোলার পর zip ফাইলটা রেখে দেবে?'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract
+        env:
+          ZIP_PATH: ${{ inputs.zip_path }}
+          DEST: ${{ inputs.dest }}
+        run: |
+          set -euo pipefail
+          test -f "$ZIP_PATH" || { echo "::error::পাওয়া যায়নি: $ZIP_PATH"; exit 1; }
+          mkdir -p "$DEST"
+          unzip -o "$ZIP_PATH" -d "$DEST"
+          rm -rf __MACOSX
+          find . -name '.DS_Store' -delete
+          if [ "${{ inputs.keep_zip }}" != "true" ]; then rm -f "$ZIP_PATH"; fi
+
+      - name: Redact secrets
+        run: |
+          set -euo pipefail
+          find . -type f \( -name '*.php' -o -name '*.js' -o -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.env*' -o -name '.htaccess' \) \
+            -not -path './.git/*' -print0 \
+          | xargs -0 --no-run-if-empty sed -i -E \
+              -e 's/(ghp_|gho_|ghs_|github_pat_)[A-Za-z0-9_]+/REDACTED/g' \
+              -e 's/sk-[A-Za-z0-9_-]{16,}/REDACTED/g'
+
+      - name: Show tree
+        run: find . -type f -not -path './.git/*' | sort | head -200
+
+      - name: Commit and push
+        env:
+          ZIP_PATH: ${{ inputs.zip_path }}
+        run: |
+          set -euo pipefail
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then echo "কিছু বদলায়নি"; exit 0; fi
+          git commit -m "Extract $ZIP_PATH"
+          git push
